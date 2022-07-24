@@ -7,7 +7,6 @@ import pandas as pd
 import math
 import matplotlib.pyplot as plt
 from scipy.stats import norm
-import scipy.stats as stats
 from scipy.stats import normaltest
 from scipy.stats import shapiro
 from scipy.stats import anderson
@@ -17,7 +16,7 @@ from scipy.stats import mannwhitneyu
 alpha = 0.05
 
 # import dataset
-df = pd.read_csv("spba-flats-210928.csv")
+df = pd.read_csv('spba-flats-210928.csv')
 print(df)
 type(df["price_m"])
 
@@ -46,7 +45,7 @@ plt.title(title)
 # save to .pdf
 plt.savefig('spba-price-histogram-py.pdf')
 
-# create separate data frames for city and suburbs
+# create separate dataframes for city and suburbs
 dfs = df1[df1["county"].str.startswith('s')]
 dfl = df1[df1["county"].str.startswith('l')]
 
@@ -117,7 +116,7 @@ plt.savefig('spb-lo-boxplot-py.pdf')
 stat, p = shapiro(dfs['price_m'])
 print('Statistics=%.3f, p=%.3f' % (stat, p))
 # interpret
-if p < alpha:
+if p <= alpha:
     print('Sample does not look Gaussian (reject H0)')
 else:
     print('Sample looks Gaussian (fail to reject H0)')
@@ -126,7 +125,7 @@ else:
 stat, p = shapiro(dfl['price_m'])
 print('Statistics=%.3f, p=%.3f' % (stat, p))
 # interpret
-if p < alpha:
+if p <= alpha:
     print('Sample does not look Gaussian (reject H0)')
 else:
     print('Sample looks Gaussian (fail to reject H0)')
@@ -137,7 +136,7 @@ else:
 stat, p = normaltest(dfs['price_m'])
 print('Statistics=%.3f, p=%.3f' % (stat, p))
 # interpret
-if p < alpha:
+if p <= alpha:
     print('Sample does not look Gaussian (reject H0)')
 else:
     print('Sample looks Gaussian (fail to reject H0)')
@@ -146,7 +145,7 @@ else:
 stat, p = normaltest(dfl['price_m'])
 print('Statistics=%.3f, p=%.3f' % (stat, p))
 # interpret
-if p < alpha:
+if p <= alpha:
     print('Sample does not look Gaussian (reject H0)')
 else:
     print('Sample looks Gaussian (fail to reject H0)')
@@ -185,6 +184,11 @@ if p < 0.05:
     print('Probably different distributions')
 else:
     print('Probably the same distribution')
+
+# calculate AUC&RBC
+n1n2 = len(dfs.index) * len(dfl.index)
+auc = stat/n1n2
+rbc = auc-(1-auc)
 
 # U = stats.mannwhitneyu(x=dfs['price_m'], y=dfl['price_m'],
 #                       alternative='two-sided')
